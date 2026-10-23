@@ -5,6 +5,10 @@ import { COOKIE_OPTIONS } from "./cookies";
 const PROTECTED = ["/notes", "/settings"];
 const AUTH_ONLY = ["/login", "/signup", "/forgot-password"];
 
+export function isGuest(user: { is_anonymous?: boolean; user_metadata?: Record<string, unknown> }) {
+  return user.is_anonymous === true || user.user_metadata?.guest === true;
+}
+
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -41,14 +45,19 @@ export async function updateSession(request: NextRequest) {
     return res;
   };
 
+  // No registration needed: visitors without a session get a guest session.
   if (!user && PROTECTED.some((p) => path === p || path.startsWith(p + "/"))) {
-    return redirectTo("/login", true);
+    return redirectTo("/start", true);
   }
-  if (user && AUTH_ONLY.includes(path)) {
+  if (user && path === "/start") {
+    return redirectTo("/notes");
+  }
+  // Guests may still open login/sign-up to switch to a real account.
+  if (user && !isGuest(user) && AUTH_ONLY.includes(path)) {
     return redirectTo("/notes");
   }
   if (path === "/") {
-    return redirectTo(user ? "/notes" : "/login");
+    return redirectTo(user ? "/notes" : "/start");
   }
   return response;
 }

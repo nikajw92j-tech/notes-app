@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { Keyboard, LogOut, Moon, Settings, Sun } from "lucide-react";
+import { Keyboard, LogIn, LogOut, Moon, Settings, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Menu, MenuItem, MenuLabel, MenuSeparator } from "@/components/ui/menu";
 import { useWorkspace } from "@/components/app/workspace";
@@ -55,7 +55,9 @@ export function ProfileMenu() {
       className="w-64"
     >
       <MenuLabel>{t("profile.signedInAs")}</MenuLabel>
-      <div className="truncate px-2.5 pb-2 text-preset-4 text-fg">{profile.username || profile.email}</div>
+      <div className="truncate px-2.5 pb-2 text-preset-4 text-fg">
+        {profile.username || (profile.is_guest ? t("profile.guest") : profile.email)}
+      </div>
       <MenuSeparator />
       <MenuItem icon={<Settings />} onSelect={() => router.push("/settings")}>
         {t("nav.settings")}
@@ -70,9 +72,16 @@ export function ProfileMenu() {
         {t(isDark ? "profile.lightMode" : "profile.darkMode")}
       </MenuItem>
       <MenuSeparator />
-      <MenuItem icon={<LogOut />} disabled={pending} onSelect={() => startTransition(() => logout())}>
-        {t("profile.logout")}
-      </MenuItem>
+      {profile.is_guest ? (
+        // Logging a guest out would orphan their notes, so offer sign-in instead.
+        <MenuItem icon={<LogIn />} onSelect={() => router.push("/login")}>
+          {t("profile.loginToAccount")}
+        </MenuItem>
+      ) : (
+        <MenuItem icon={<LogOut />} disabled={pending} onSelect={() => startTransition(() => logout())}>
+          {t("profile.logout")}
+        </MenuItem>
+      )}
     </Menu>
   );
 }

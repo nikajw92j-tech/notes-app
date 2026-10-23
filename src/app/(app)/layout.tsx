@@ -8,7 +8,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/start");
 
   const [profile, settings] = await Promise.all([getProfile(supabase, user), getSettings(supabase, user.id)]);
 

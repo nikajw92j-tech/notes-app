@@ -37,7 +37,7 @@ export async function api<T>(url: string, init: RequestInit & { json?: unknown }
 
   if (!res.ok) {
     if (res.status === 401 && typeof window !== "undefined") {
-      window.location.href = `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      window.location.href = `/start?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     }
     throw new ApiClientError(
       res.status,

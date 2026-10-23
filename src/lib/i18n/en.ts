@@ -297,6 +297,12 @@ export const en = {
 
   "common.loading": "Loading…",
   "common.retry": "Try again",
+
+  "start.preparing": "Opening your notes…",
+  "auth.continueAsGuest": "Continue without an account",
+  "profile.guest": "Guest",
+  "profile.loginToAccount": "Log in or create an account",
+  "settings.guestNotice": "You’re using the app without an account. Your notes are private and saved, but tied to this browser — clearing site data or using another device won’t show them.",
 } as const;
 
 export type MessageKey = keyof typeof en;

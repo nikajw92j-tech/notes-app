@@ -18,10 +18,13 @@ export async function getProfile(db: SupabaseClient, user: User): Promise<Profil
     avatar_url: null,
     created_at: user.created_at,
   };
+  const isGuest = user.is_anonymous === true || user.user_metadata?.guest === true;
   return {
     ...row,
+    email: isGuest ? "" : row.email,
     avatar_src: row.avatar_url ? fileSrc("avatars", row.avatar_url) : null,
-    providers: (user.app_metadata?.providers as string[] | undefined) ?? [],
+    providers: isGuest ? [] : ((user.app_metadata?.providers as string[] | undefined) ?? []),
+    is_guest: isGuest,
   };
 }
 

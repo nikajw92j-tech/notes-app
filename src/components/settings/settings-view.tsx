@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useCallback, useEffect, useId, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -309,8 +310,17 @@ function ProfilePanel() {
           </div>
         </div>
 
+        {profile.is_guest && (
+          <div className="flex flex-col items-start gap-3 rounded-xl border border-line bg-muted p-4 text-preset-5 text-fg-3">
+            <p>{t("settings.guestNotice")}</p>
+            <Link href="/login" className="focus-ring rounded text-preset-4 text-blue-500 hover:underline">
+              {t("profile.loginToAccount")}
+            </Link>
+          </div>
+        )}
+
         <form onSubmit={save} className="flex flex-col gap-4">
-          <Field label={t("settings.email")} value={profile.email} readOnly disabled />
+          {!profile.is_guest && <Field label={t("settings.email")} value={profile.email} readOnly disabled />}
           <Field
             label={t("settings.username")}
             value={username}
@@ -320,7 +330,7 @@ function ProfilePanel() {
             maxLength={30}
             autoComplete="username"
           />
-          <div className="flex flex-col gap-1.5">
+          <div className={cn("flex flex-col gap-1.5", profile.is_guest && "hidden")}>
             <span className="text-preset-4 text-fg">{t("settings.signInMethods")}</span>
             <div className="flex flex-wrap gap-1.5">
               {(profile.providers.length ? profile.providers : ["email"]).map((p) => (

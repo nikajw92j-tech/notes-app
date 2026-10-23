@@ -70,6 +70,8 @@ export interface Profile {
   /** Same-origin URL that serves the private avatar, or null. */
   avatar_src: string | null;
   providers: string[];
+  /** Signed in without registration (auto-created on first visit). */
+  is_guest: boolean;
   created_at: string;
 }
 

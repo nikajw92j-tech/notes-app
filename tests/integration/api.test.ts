@@ -45,10 +45,10 @@ describe.skipIf(!hasApp)("REST API", () => {
       expect(res.status).toBe(401);
     });
 
-    it("redirects unauthenticated page visits to /login", async () => {
+    it("sends visitors without a session to the no-registration guest start", async () => {
       const res = await fetch(`${process.env.TEST_APP_URL}/notes`, { redirect: "manual" });
       expect([302, 307]).toContain(res.status);
-      expect(res.headers.get("location")).toContain("/login");
+      expect(res.headers.get("location")).toContain("/start");
     });
   });
 

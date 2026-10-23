@@ -74,6 +74,9 @@ export function LoginForm() {
         </Button>
       </form>
       <GoogleButton next={next} />
+      <Link href="/start" className={`${linkClass} self-center text-preset-5 text-fg-4`}>
+        {t("auth.continueAsGuest")}
+      </Link>
     </AuthCard>
   );
 }
